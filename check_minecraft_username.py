@@ -20,10 +20,6 @@ class MinecraftUsernameChecker:
         self.check_interval = check_interval
         self.last_status = None
         self.webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
-        
-        if not self.webhook_url:
-            print("ℹ️ Discord webhook not configured. Only Windows notifications will be used.")
-            print("   To enable Discord notifications, create a .env file with DISCORD_WEBHOOK_URL=your_webhook_url\n")
 
     def check_username_availability(self):
         if not self.username.strip():
@@ -111,7 +107,7 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
 
         if not self.webhook_url:
             print("⚠️  Warning: Discord webhook not configured. Only Windows notifications will be used.")
-            print("             To enable Discord notifications, create a .env file with DISCORD_WEBHOOK_URL=your_webhook_url\n")
+            print("➡️  To enable Discord notifications, create a .env file with DISCORD_WEBHOOK_URL=your_webhook_url\n")
 
         print(f"🔍 Starting monitoring for username '{self.username}'")
         print(f"⏱️  Check interval: {self.check_interval} seconds")

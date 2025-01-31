@@ -23,7 +23,6 @@ call .venv\Scripts\activate
 echo Installing dependencies...
 pip install -r requirements.txt
 
-echo Starting MCUS with username: %USERNAME%
 python check_minecraft_username.py --username "%USERNAME%"
 
 pause
