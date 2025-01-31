@@ -64,6 +64,35 @@ Arguments:
 - 💾 Username persistence in execute.bat
 - 🎨 ASCII art banner
 
+## 🚨 Notifications System
+
+When a username becomes available, the tool will trigger multiple notifications:
+
+### 1. Windows Notification 🔔
+
+- Instant pop-up notification in Windows
+- Shows the available username
+- Stays visible for 10 seconds
+
+### 2. Notepad File 📝
+
+- Automatically creates a text file on your Desktop
+- Filename: `minecraft_username_[USERNAME].txt`
+- Contains:
+  - The available username
+  - Direct link to Minecraft's profile page for changing username
+  - Exact date and time when it became available
+- Opens automatically in Notepad
+
+### 3. Discord Webhook (Optional) 🤖
+
+- Sends a rich embed message to your Discord channel
+- Includes:
+  - Username that became available
+  - Timestamp of availability
+  - Green color coding for visibility
+- To enable, see Discord Integration section below
+
 ## 🔌 Discord Integration
 
 To enable Discord notifications:
