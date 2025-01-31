@@ -1,8 +1,8 @@
-# Minecraft Username Checker
+# 🎮 Minecraft Username Checker
 
 A command-line tool to check if a Minecraft username is available, with automatic refresh at customizable intervals.
 
-## Requirements
+## 📋 Requirements
 
 1. Make sure you have Python installed on your system
 2. Run `execute.bat` or install dependencies manually:
@@ -11,9 +11,9 @@ A command-line tool to check if a Minecraft username is available, with automati
 pip install -r requirements.txt
 ```
 
-## Usage
+## 🚀 Usage
 
-### Using execute.bat (Recommended)
+### 💻 Using execute.bat (Recommended)
 
 Simply run the `execute.bat` file. It will:
 
@@ -21,7 +21,7 @@ Simply run the `execute.bat` file. It will:
 2. Install all dependencies
 3. Start monitoring the username
 
-### Manual Usage
+### ⌨️ Manual Usage
 
 Run the script with the following arguments:
 
@@ -34,19 +34,19 @@ Arguments:
 - `--username`: The Minecraft username to check (required)
 - `--interval`: Check interval in seconds (optional, default: 10)
 
-## Features
+## ✨ Features
 
-- Real-time username availability monitoring
-- Windows notifications when username becomes available
-- Automatic notepad file creation with:
-  - Available username
-  - Link to change Minecraft username
-  - Timestamp
-- Discord webhook integration (optional)
-- Error handling with explicit messages
-- Clean console output with timestamps
+- 🔄 Real-time username availability monitoring
+- 🔔 Windows notifications when username becomes available
+- 📝 Automatic notepad file creation with:
+  - 👤 Available username
+  - 🔗 Link to change Minecraft username
+  - 🕒 Timestamp
+- 🤖 Discord webhook integration (optional)
+- ⚠️ Error handling with explicit messages
+- 📊 Clean console output with timestamps
 
-## Discord Integration
+## 🔌 Discord Integration
 
 To enable Discord notifications:
 
