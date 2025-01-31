@@ -15,11 +15,27 @@ pip install -r requirements.txt
 
 ### 💻 Using execute.bat (Recommended)
 
-Simply run the `execute.bat` file. It will:
+You can run the script in two ways:
+
+1. With a username:
+
+```bash
+execute.bat desired_username
+# Example: execute.bat Notch
+```
+
+2. Without arguments (uses last saved username):
+
+```bash
+execute.bat
+```
+
+The script will:
 
 1. Create a Python virtual environment if needed
 2. Install all dependencies
-3. Start monitoring the username
+3. Save the username for next use (if provided)
+4. Start monitoring the username
 
 ### ⌨️ Manual Usage
 
@@ -45,6 +61,8 @@ Arguments:
 - 🤖 Discord webhook integration (optional)
 - ⚠️ Error handling with explicit messages
 - 📊 Clean console output with timestamps
+- 💾 Username persistence in execute.bat
+- 🎨 ASCII art banner
 
 ## 🔌 Discord Integration
 
