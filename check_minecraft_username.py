@@ -8,8 +8,11 @@ import argparse
 from win10toast import ToastNotifier
 import subprocess
 
-# Load environment variables
-load_dotenv()
+# Try to load environment variables, continue if .env doesn't exist
+try:
+    load_dotenv()
+except Exception:
+    pass
 
 class MinecraftUsernameChecker:
     def __init__(self, username, check_interval=10):
@@ -17,6 +20,10 @@ class MinecraftUsernameChecker:
         self.check_interval = check_interval
         self.last_status = None
         self.webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+        
+        if not self.webhook_url:
+            print("ℹ️ Discord webhook not configured. Only Windows notifications will be used.")
+            print("   To enable Discord notifications, create a .env file with DISCORD_WEBHOOK_URL=your_webhook_url\n")
 
     def check_username_availability(self):
         if not self.username.strip():
@@ -68,6 +75,7 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
             # Always send Windows notification, even if Discord is not configured
             self.send_windows_notification_and_note()
             
+            # Skip Discord notification if webhook is not configured
             if not self.webhook_url:
                 return
 
@@ -83,12 +91,11 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
                 "embeds": [embed]
             }
             
-            if self.webhook_url:
-                try:
-                    response = requests.post(self.webhook_url, json=data)
-                    response.raise_for_status()
-                except requests.exceptions.RequestException as e:
-                    print(f"Error sending Discord notification: {e}")
+            try:
+                response = requests.post(self.webhook_url, json=data)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                print(f"Error sending Discord notification: {e}")
 
     def run(self):
         ascii_art = """
