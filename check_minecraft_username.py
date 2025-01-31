@@ -108,6 +108,11 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
         Minecraft Username Sniper
 """
         print(ascii_art)
+
+        if not self.webhook_url:
+            print("⚠️  Warning: Discord webhook not configured. Only Windows notifications will be used.")
+            print("             To enable Discord notifications, create a .env file with DISCORD_WEBHOOK_URL=your_webhook_url\n")
+
         print(f"🔍 Starting monitoring for username '{self.username}'")
         print(f"⏱️  Check interval: {self.check_interval} seconds")
         print("📡 Press Ctrl+C to stop\n")
