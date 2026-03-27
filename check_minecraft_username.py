@@ -1,12 +1,13 @@
-import requests
-import sys
-from datetime import datetime, UTC
-import os
-from dotenv import load_dotenv
-import time
 import argparse
-from win10toast import ToastNotifier
+import os
 import subprocess
+import sys
+import time
+from datetime import UTC, datetime
+
+import httpx
+from dotenv import load_dotenv
+from win10toast import ToastNotifier
 
 # Try to load environment variables, continue if .env doesn't exist
 try:
@@ -24,20 +25,20 @@ class MinecraftUsernameChecker:
     def check_username_availability(self):
         if not self.username.strip():
             return None, "Empty username"
-            
+
         url = f"https://api.mojang.com/users/profiles/minecraft/{self.username}"
-        
+
         try:
-            response = requests.get(url)
-            
+            response = httpx.get(url, timeout=10.0)
+
             if response.status_code == 204 or response.status_code == 404:
                 return True, f"Username '{self.username}' is available! 🎮"
             elif response.status_code == 200:
                 return False, f"Username '{self.username}' is already taken. ❌"
             else:
                 return None, f"Error during check. Error code: {response.status_code}"
-                
-        except requests.exceptions.RequestException as e:
+
+        except httpx.RequestError as e:
             return None, f"Connection error: {e}"
 
     def send_windows_notification_and_note(self):
@@ -49,7 +50,7 @@ class MinecraftUsernameChecker:
             duration=10,
             threaded=True
         )
-        
+
         # Create notepad content
         note_content = f"""Minecraft username available: {self.username}
 
@@ -57,12 +58,12 @@ Link to change your username:
 https://www.minecraft.net/msaprofile/mygames/editprofile
 
 Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
-        
+
         # Create notepad file
         note_path = os.path.join(os.path.expanduser("~"), "Desktop", f"minecraft_username_{self.username}.txt")
         with open(note_path, "w", encoding="utf-8") as f:
             f.write(note_content)
-        
+
         # Open notepad
         subprocess.Popen(["notepad.exe", note_path])
 
@@ -70,7 +71,7 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
         if is_available and (self.last_status is None or not self.last_status):
             # Always send Windows notification, even if Discord is not configured
             self.send_windows_notification_and_note()
-            
+
             # Skip Discord notification if webhook is not configured
             if not self.webhook_url:
                 return
@@ -81,16 +82,16 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
                 "color": 5763719,  # Green
                 "timestamp": datetime.now(UTC).isoformat()
             }
-            
+
             data = {
                 "content": "🎯 Availability Alert!",
                 "embeds": [embed]
             }
-            
+
             try:
-                response = requests.post(self.webhook_url, json=data)
+                response = httpx.post(self.webhook_url, json=data, timeout=10.0)
                 response.raise_for_status()
-            except requests.exceptions.RequestException as e:
+            except httpx.HTTPError as e:
                 print(f"Error sending Discord notification: {e}")
 
     def run(self):
@@ -112,12 +113,12 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
         print(f"🔍 Starting monitoring for username '{self.username}'")
         print(f"⏱️  Check interval: {self.check_interval} seconds")
         print("📡 Press Ctrl+C to stop\n")
-        
+
         try:
             while True:
                 status, message = self.check_username_availability()
                 current_time = datetime.now().strftime("%H:%M:%S")
-                
+
                 # If status changed or first check
                 if status != self.last_status:
                     print(f"[{current_time}] {message}")
@@ -125,9 +126,9 @@ Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
                     self.last_status = status
                 else:
                     print(f"[{current_time}] No status change")
-                
+
                 time.sleep(self.check_interval)
-                
+
         except KeyboardInterrupt:
             print("\n👋 Monitoring stopped")
             sys.exit(0)
@@ -142,4 +143,4 @@ def main():
     checker.run()
 
 if __name__ == "__main__":
-    main() 
+    main()
