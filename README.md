@@ -59,7 +59,7 @@ python check_minecraft_username.py --username "desired_username" --interval 10
 ## ✨ Features
 
 - 🔄 Real-time username availability monitoring
-- 🔔 Windows notifications when username becomes available
+- 🔔 Windows notifications via `winotify` when username becomes available
 - 📝 Automatic notepad file creation with:
   - 👤 Available username
   - 🔗 Link to change Minecraft username
@@ -76,7 +76,7 @@ When a username becomes available, the tool will trigger multiple notifications:
 
 ### 1. Windows Notification 🔔
 
-- Instant pop-up notification in Windows
+- Instant toast notification in Windows via `winotify`
 - Shows the available username
 - Stays visible for 10 seconds
 

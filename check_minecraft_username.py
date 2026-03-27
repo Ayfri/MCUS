@@ -4,10 +4,11 @@ import subprocess
 import sys
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
-from win10toast import ToastNotifier
+from winotify import Notification
 
 # Try to load environment variables, continue if .env doesn't exist
 try:
@@ -21,6 +22,7 @@ class MinecraftUsernameChecker:
         self.check_interval = check_interval
         self.last_status = None
         self.webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+        self.notification_app_id = "MCUS"
 
     def check_username_availability(self):
         if not self.username.strip():
@@ -42,16 +44,21 @@ class MinecraftUsernameChecker:
             return None, f"Connection error: {e}"
 
     def send_windows_notification_and_note(self):
-        # Create Windows notification
-        toaster = ToastNotifier()
-        toaster.show_toast(
-            "Minecraft Username Available!",
-            f"The username {self.username} is available!",
-            duration=10,
-            threaded=True
+        toast = Notification(
+            app_id=self.notification_app_id,
+            title="Minecraft Username Available!",
+            msg=f"The username {self.username} is available!",
         )
 
-        # Create notepad content
+        try:
+            toast.show()
+        except Exception as e:
+            print(f"Error showing Windows notification: {e}")
+
+        note_path = self._write_availability_note()
+        subprocess.Popen(["notepad.exe", str(note_path)])
+
+    def _write_availability_note(self):
         note_content = f"""Minecraft username available: {self.username}
 
 Link to change your username:
@@ -59,13 +66,10 @@ https://www.minecraft.net/msaprofile/mygames/editprofile
 
 Check timestamp: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"""
 
-        # Create notepad file
-        note_path = os.path.join(os.path.expanduser("~"), "Desktop", f"minecraft_username_{self.username}.txt")
-        with open(note_path, "w", encoding="utf-8") as f:
-            f.write(note_content)
-
-        # Open notepad
-        subprocess.Popen(["notepad.exe", note_path])
+        desktop_path = Path.home() / "Desktop"
+        note_path = desktop_path / f"minecraft_username_{self.username}.txt"
+        note_path.write_text(note_content, encoding="utf-8")
+        return note_path
 
     def send_discord_notification(self, is_available):
         if is_available and (self.last_status is None or not self.last_status):
