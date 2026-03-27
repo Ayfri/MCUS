@@ -5,11 +5,9 @@ A command-line tool to check if a Minecraft username is available, with automati
 ## 📋 Requirements
 
 1. Make sure you have Python installed on your system
-2. Run `execute.bat` or install dependencies manually:
+2. Install `uv` if you want the fastest setup and launch path
 
-```bash
-pip install -r requirements.txt
-```
+Everything is now defined in `pyproject.toml`. There is no `requirements.txt` anymore.
 
 ## 🚀 Usage
 
@@ -32,23 +30,31 @@ execute.bat
 
 The script will:
 
-1. Create a Python virtual environment if needed
-2. Install all dependencies
-3. Save the username for next use (if provided)
-4. Start monitoring the username
+1. Use `uv` automatically when it is installed
+2. Fall back to a local Python virtual environment if `uv` is not available
+3. Install the project from `pyproject.toml`
+4. Save the username for next use (if provided)
+5. Start monitoring the username
 
 ### ⌨️ Manual Usage
 
 Run the script with the following arguments:
 
 ```bash
-python check_minecraft_username.py --username "desired_username" --interval 10
+uv sync
+uv run mcus --username "desired_username" --interval 10
 ```
 
 Arguments:
 
 - `--username`: The Minecraft username to check (required)
 - `--interval`: Check interval in seconds (optional, default: 10)
+
+If you do not have `uv`, you can still run the module directly with Python:
+
+```bash
+python check_minecraft_username.py --username "desired_username" --interval 10
+```
 
 ## ✨ Features
 

@@ -12,17 +12,24 @@ if "%~1" neq "" (
     set "USERNAME=!SAVED_USERNAME!"
 )
 
-IF NOT EXIST .venv (
-    echo Creating Python virtual environment...
-    python -m venv .venv
+where uv >nul 2>nul
+if %errorlevel%==0 (
+    echo Using uv from pyproject.toml...
+    uv run mcus --username "%USERNAME%"
+) else (
+    if NOT EXIST .venv (
+        echo Creating Python virtual environment...
+        python -m venv .venv
+    )
+
+    echo Activating virtual environment...
+    call .venv\Scripts\activate
+
+    echo Installing dependencies from pyproject.toml...
+    python -m pip install --upgrade pip
+    pip install .
+
+    python check_minecraft_username.py --username "%USERNAME%"
 )
-
-echo Activating virtual environment...
-call .venv\Scripts\activate
-
-echo Installing dependencies...
-pip install -r requirements.txt
-
-python check_minecraft_username.py --username "%USERNAME%"
 
 pause

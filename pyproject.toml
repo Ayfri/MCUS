@@ -1,12 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "mcus"
 version = "0.1.0"
-description = "Add your description here"
+description = "A simple tool to check Minecraft usernames for availability."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "python-dotenv==1.2.2",
     "requests==2.33.0",
+    "setuptools>=68,<81",
     "tk==0.1.0",
     "win10toast==0.9",
 ]
+
+[project.scripts]
+mcus = "check_minecraft_username:main"

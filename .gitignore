@@ -16,4 +16,5 @@ ENV/
 *.swo
 
 # Project specific
-*.log 
+*.log
+*.egg-info/
